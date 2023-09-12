@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "verdict"
+version = "0.2.0"
+description = "Evaluation and observability for LLM and RAG systems, standard library only."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Verdict contributors" }]
+keywords = ["evaluation", "observability", "llm", "rag", "metrics", "regression"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+verdict = "verdict.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/baishanyue/verdict"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"

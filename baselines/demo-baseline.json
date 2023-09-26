@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "suite": "demo",
+  "metrics": [
+    "exact_match",
+    "token_f1",
+    "rouge_l",
+    "char_bleu4",
+    "judge"
+  ],
+  "k": 5,
+  "summary": {
+    "exact_match": {
+      "count": 10,
+      "mean": 0.1,
+      "median": 0.0,
+      "p95": 0.5499999999999989,
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "token_f1": {
+      "count": 10,
+      "mean": 0.6999693698114751,
+      "median": 0.7284210526315789,
+      "p95": 0.9624999999999999,
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "rouge_l": {
+      "count": 10,
+      "mean": 0.6888582587003639,
+      "median": 0.7284210526315789,
+      "p95": 0.9624999999999999,
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "char_bleu4": {
+      "count": 10,
+      "mean": 0.685640631354438,
+      "median": 0.7643587489014245,
+      "p95": 0.958452894570333,
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "judge": {
+      "count": 10,
+      "mean": 0.747630427578957,
+      "median": 0.8074038461538462,
+      "p95": 0.9774999999999999,
+      "minimum": 0.0,
+      "maximum": 1.0
+    }
+  },
+  "cases": [
+    {
+      "id": "q01",
+      "prediction": "It merges ranked lists from multiple retrievers using the sum of reciprocal rank scores.",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 0.0,
+        "token_f1": 0.7199999999999999,
+        "rouge_l": 0.7199999999999999,
+        "char_bleu4": 0.7919101067439149,
+        "judge": 0.8048076923076923
+      },
+      "judge": {
+        "score": 0.8048076923076923,
+        "rationale": "coverage=0.75 grounding=0.77 concision=1.00 -> 0.80 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 0.75,
+          "grounding": 0.769231,
+          "concision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q02",
+      "prediction": "To stop short outputs from inflating precision.",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 1.0,
+        "token_f1": 1.0,
+        "rouge_l": 1.0,
+        "char_bleu4": 1.0,
+        "judge": 1.0
+      },
+      "judge": {
+        "score": 1.0,
+        "rationale": "coverage=1.00 grounding=1.00 concision=1.00 -> 1.00 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 1.0,
+          "grounding": 1.0,
+          "concision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q03",
+      "prediction": "Recall@k counts relevant documents in the top k, while MRR is the reciprocal rank of the first relevant document.",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 0.0,
+        "token_f1": 0.6666666666666667,
+        "rouge_l": 0.6666666666666667,
+        "char_bleu4": 0.6667247602818491,
+        "judge": 0.7401960784313726
+      },
+      "judge": {
+        "score": 0.7401960784313726,
+        "rationale": "coverage=0.59 grounding=0.87 concision=1.00 -> 0.74 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 0.588235,
+          "grounding": 0.866667,
+          "concision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q04",
+      "prediction": "It rewards results that appear earlier in the ranked list.",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 0.0,
+        "token_f1": 0.7368421052631577,
+        "rouge_l": 0.7368421052631577,
+        "char_bleu4": 0.6879541288229161,
+        "judge": 0.7794444444444445
+      },
+      "judge": {
+        "score": 0.7794444444444445,
+        "rationale": "coverage=0.70 grounding=0.78 concision=1.00 -> 0.78 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 0.7,
+          "grounding": 0.777778,
+          "concision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q05",
+      "prediction": "It preserves facts that would otherwise be split across chunk boundaries.",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 0.0,
+        "token_f1": 0.9090909090909091,
+        "rouge_l": 0.9090909090909091,
+        "char_bleu4": 0.9076730990451847,
+        "judge": 0.9272727272727272
+      },
+      "judge": {
+        "score": 0.9272727272727272,
+        "rationale": "coverage=0.91 grounding=0.91 concision=1.00 -> 0.93 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 0.909091,
+          "grounding": 0.909091,
+          "concision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q06",
+      "prediction": "It gives no credit to paraphrases that are semantically correct.",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 0.0,
+        "token_f1": 0.888888888888889,
+        "rouge_l": 0.7777777777777777,
+        "char_bleu4": 0.8101913566844189,
+        "judge": 0.9500000000000001
+      },
+      "judge": {
+        "score": 0.9500000000000001,
+        "rationale": "coverage=1.00 grounding=0.80 concision=1.00 -> 0.95 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 1.0,
+          "grounding": 0.8,
+          "concision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q07",
+      "prediction": "Because judge scores can drift and disagree with human labels.",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 0.0,
+        "token_f1": 0.7,
+        "rouge_l": 0.7,
+        "char_bleu4": 0.736807391058934,
+        "judge": 0.81
+      },
+      "judge": {
+        "score": 0.81,
+        "rationale": "coverage=0.70 grounding=0.90 concision=1.00 -> 0.81 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 0.7,
+          "grounding": 0.9,
+          "concision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q08",
+      "prediction": "The average latency of the slowest requests.",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 0.0,
+        "token_f1": 0.4615384615384615,
+        "rouge_l": 0.4615384615384615,
+        "char_bleu4": 0.4548549012973719,
+        "judge": 0.55625
+      },
+      "judge": {
+        "score": 0.55625,
+        "rationale": "coverage=0.38 grounding=0.60 concision=1.00 -> 0.56 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 0.375,
+          "grounding": 0.6,
+          "concision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q09",
+      "prediction": "Relative tolerance scales with the baseline; absolute tolerance is a fixed score margin.",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 0.0,
+        "token_f1": 0.9166666666666666,
+        "rouge_l": 0.9166666666666666,
+        "char_bleu4": 0.8002905696097901,
+        "judge": 0.9083333333333334
+      },
+      "judge": {
+        "score": 0.9083333333333334,
+        "rationale": "coverage=0.83 grounding=1.00 concision=1.00 -> 0.91 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 0.833333,
+          "grounding": 1.0,
+          "concision": 1.0
+        }
+      }
+    },
+    {
+      "id": "q10",
+      "prediction": "",
+      "missing_prediction": false,
+      "scores": {
+        "exact_match": 0.0,
+        "token_f1": 0.0,
+        "rouge_l": 0.0,
+        "char_bleu4": 0.0,
+        "judge": 0.0
+      },
+      "judge": {
+        "score": 0.0,
+        "rationale": "coverage=0.00 grounding=0.00 concision=0.00 -> 0.00 (deterministic heuristic baseline, not an LLM)",
+        "judge": "heuristic-baseline",
+        "criteria": {
+          "coverage": 0.0,
+          "grounding": 0.0,
+          "concision": 0.0
+        }
+      }
+    }
+  ],
+  "missing_predictions": [],
+  "ignored_predictions": []
+}

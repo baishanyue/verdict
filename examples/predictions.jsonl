@@ -1,0 +1,10 @@
+{"id": "q01", "prediction": "It merges ranked lists from multiple retrievers using the sum of reciprocal rank scores."}
+{"id": "q02", "prediction": "To stop short outputs from inflating precision."}
+{"id": "q03", "prediction": "Recall@k counts relevant documents in the top k, while MRR is the reciprocal rank of the first relevant document."}
+{"id": "q04", "prediction": "It rewards results that appear earlier in the ranked list."}
+{"id": "q05", "prediction": "It preserves facts that would otherwise be split across chunk boundaries."}
+{"id": "q06", "prediction": "It gives no credit to paraphrases that are semantically correct."}
+{"id": "q07", "prediction": "Because judge scores can drift and disagree with human labels."}
+{"id": "q08", "prediction": "The average latency of the slowest requests."}
+{"id": "q09", "prediction": "Relative tolerance scales with the baseline; absolute tolerance is a fixed score margin."}
+{"id": "q10", "prediction": ""}

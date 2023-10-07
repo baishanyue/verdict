@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Verdict — Ship on evidence, not vibes.</title>
+<meta name="description" content="Evaluation and observability for LLM and RAG systems. Deterministic metrics, seeded cases, regression gates and single-file reports.">
+<style>
+  :root {
+    --bg: #0A1014;
+    --panel: #0B1017;
+    --line: #1B242F;
+    --text: #E8EFF5;
+    --muted: #8B98A9;
+    --accent: ##4CC9F0;
+    --blue: #8FB8FF;
+    --violet: #B9A6FF;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: dark; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1100px 520px at 78% -6%, rgba(126, 231, 208, 0.07), transparent 62%),
+      radial-gradient(900px 480px at -10% 12%, rgba(143, 184, 255, 0.05), transparent 58%),
+      var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .shell { width: min(1120px, calc(100% - 56px)); margin: 0 auto; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .brand { color: var(--text); }
+  .brand span { color: var(--muted); }
+  .nav { display: flex; gap: 22px; color: var(--muted); }
+  .nav a:hover { color: var(--accent); }
+  .hero { padding: 34px 0 0; }
+  .hero-art { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
+  .hero-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 28px;
+    padding: 22px 0 46px; border-bottom: 1px solid var(--line);
+  }
+  .hero-note { max-width: 600px; margin: 0; color: var(--muted); font-size: 14px; }
+  .hero-note strong { color: var(--text); font-weight: 500; }
+  .actions { display: flex; gap: 10px; flex: 0 0 auto; }
+  .btn {
+    display: inline-block; padding: 11px 18px; border: 1px solid var(--line);
+    border-radius: 2px; font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--text);
+    transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+  }
+  .btn:hover { border-color: var(--muted); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #07110E; }
+  .btn.primary:hover { background: #9AF0DD; border-color: #9AF0DD; }
+  .section { padding: 56px 0 0; }
+  .label {
+    margin: 0 0 22px; color: var(--muted); font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .label b { color: var(--accent); font-weight: 500; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .card { background: var(--panel); padding: 26px 24px 24px; min-height: 214px; }
+  .card .no { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--accent); }
+  .card h2 { margin: 26px 0 8px; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+  .card p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .card code { margin-top: 16px; display: block; color: var(--blue); font-family: var(--mono); font-size: 11px; }
+  .split { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 48px; align-items: start; padding: 56px 0 0; }
+  .split h2 { margin: 0 0 14px; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.12; letter-spacing: -0.035em; font-weight: 600; }
+  .split p { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+  .split p code { color: var(--blue); font-family: var(--mono); font-size: 12px; }
+  .terminal { border: 1px solid var(--line); background: #070B10; border-radius: 2px; overflow: hidden; }
+  .termbar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #2B3744; }
+  .dot.a { background: ##4CC9F0; opacity: 0.75; }
+  .termname { margin-left: auto; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  pre { margin: 0; padding: 20px 20px 24px; overflow-x: auto; font-family: var(--mono); font-size: 12px; line-height: 1.85; color: #C9D5E1; }
+  .p { color: var(--accent); }
+  .c { color: #64748B; }
+  .m { color: var(--blue); }
+  .metrics { padding: 56px 0 0; }
+  .strip { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .stat { padding: 26px 22px 24px; border-right: 1px solid var(--line); }
+  .stat:last-child { border-right: 0; }
+  .stat .num { display: block; font-size: clamp(26px, 3.4vw, 38px); letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat .unit { display: block; margin-top: 10px; color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; }
+  .stat .num.accent { color: var(--accent); }
+  .fine { margin: 16px 0 0; color: #64748B; font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; }
+  footer { margin-top: 64px; border-top: 1px solid var(--line); }
+  .foot { display: flex; justify-content: space-between; gap: 24px; padding: 22px 0 34px; color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .foot a:hover { color: var(--accent); }
+  @media (max-width: 860px) {
+    .cards { grid-template-columns: 1fr; }
+    .split { grid-template-columns: 1fr; gap: 26px; }
+    .strip { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2) { border-right: 0; }
+    .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  }
+  @media (max-width: 620px) {
+    .shell { width: calc(100% - 36px); }
+    .nav { display: none; }
+    .hero-row { flex-direction: column; align-items: flex-start; }
+    .hero-note { font-size: 13px; }
+    .strip { grid-template-columns: 1fr; }
+    .stat { border-right: 0; border-bottom: 1px solid var(--line); }
+    .stat:last-child { border-bottom: 0; }
+    .foot { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="shell topbar">
+  <a class="brand" href="#">Verdict</a>
+  <nav class="nav">
+    <a href="#capabilities">Capabilities</a>
+    <a href="#quickstart">Quickstart</a>
+    <a href="#metrics">Metrics</a>
+    <a href="https://github.com/baishanyue/verdict">GitHub</a>
+  </nav>
+</header>
+
+<main class="shell">
+  <h1 class="sr-only">Verdict — Ship on evidence, not vibes.</h1>
+
+  <section class="hero">
+    <img class="hero-art" src="../assets/hero-dark.svg" alt="Verdict — evaluation and observability for LLM and RAG systems">
+    <div class="hero-row">
+      <p class="hero-note"><strong>Deterministic metrics, seeded cases, and a regression gate.</strong> Built for teams that need evidence before a prompt, chunker or reranker ships.</p>
+      <div class="actions">
+        <a class="btn primary" href="#quickstart">Quickstart</a>
+        <a class="btn" href="#capabilities">Capabilities</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="capabilities">
+    <p class="label"><b>01</b> / Capabilities</p>
+    <div class="cards">
+      <article class="card">
+        <span class="no">01 — DATASETS</span>
+        <h2>Cases with a contract</h2>
+        <p>Load JSONL, validate required fields, split and sample with a seed. The same file produces the same suite every run.</p>
+        <code>datasets.py</code>
+      </article>
+      <article class="card">
+        <span class="no">02 — METRICS</span>
+        <h2>Numbers you can defend</h2>
+        <p>Exact match, token F1, ROUGE-L, character BLEU-4, Recall@k, MRR and nDCG@k. Pure functions, no model calls.</p>
+        <code>metrics.py</code>
+      </article>
+      <article class="card">
+        <span class="no">03 — REGRESSION</span>
+        <h2>A gate, not a dashboard</h2>
+        <p>Compare a candidate against a baseline with absolute and relative tolerances, then return a pass or fail exit code.</p>
+        <code>regression.py</code>
+      </article>
+    </div>
+  </section>
+
+  <section class="split" id="quickstart">
+    <div>
+      <p class="label"><b>02</b> / Quickstart</p>
+      <h2>One suite.<br>One command.</h2>
+      <p>Install from the repository, point at the example cases, and write a run artefact. Reports are generated from the same JSON, so CI and review never disagree.</p>
+      <p><code>python -m pip install -e .</code></p>
+    </div>
+    <div class="terminal">
+      <div class="termbar">
+        <span class="dot a"></span><span class="dot"></span><span class="dot"></span>
+        <span class="termname">verdict / run</span>
+      </div>
+      <pre><code><span class="p">$</span> verdict run --cases examples/cases.jsonl \
+    --predictions examples/predictions.jsonl
+<span class="c">suite: cases</span>
+<span class="c">cases: 10</span>
+  exact_match    mean=<span class="m">0.1000</span>  median=<span class="m">0.0000</span>  p95=<span class="m">0.5500</span>
+  token_f1       mean=<span class="m">0.7000</span>  median=<span class="m">0.7284</span>  p95=<span class="m">0.9625</span>
+  rouge_l        mean=<span class="m">0.6889</span>  median=<span class="m">0.7284</span>  p95=<span class="m">0.9625</span>
+<span class="c">wrote: artifacts/run.json</span>
+
+<span class="p">$</span> verdict compare --baseline baseline.json \
+    --candidate artifacts/run.json
+<span class="c">## Regression gate: PASS</span></code></pre>
+    </div>
+  </section>
+
+  <section class="metrics" id="metrics">
+    <p class="label"><b>03</b> / Measured throughput</p>
+    <div class="strip">
+      <div class="stat"><span class="num accent">1.28M</span><span class="unit">MRR cases / second</span></div>
+      <div class="stat"><span class="num">215k</span><span class="unit">Exact match cases / second</span></div>
+      <div class="stat"><span class="num">12.6k</span><span class="unit">Char BLEU-4 cases / second</span></div>
+      <div class="stat"><span class="num">7.4k</span><span class="unit">Full suite cases / second</span></div>
+    </div>
+    <p class="fine">Apple M5 · CPython 3.14.6 · 2,000 cases · median of five passes. Indicative, not comparative.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="shell foot">
+    <span>Verdict / Pure Python</span>
+    <span>Offline by default. <a href="#quickstart">Run the example</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
